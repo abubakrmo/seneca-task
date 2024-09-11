@@ -1,22 +1,19 @@
-/* Centering and gradient background */
 body {
   margin: 0;
   padding: 0;
   background: linear-gradient(135deg, #ffecd2, #fcb69f);
   background-size: 400% 400%;
-
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
+
 }
-
-
 .homepage {
   text-align: center;
   color: #3d3d3d;
+  padding: 40px;
 }
-
 .switch-container {
   display: flex;
   flex-direction: column;
@@ -26,7 +23,6 @@ body {
   align-items: center;
   width: 100%; 
 }
-
 .toggle-switch {
   display: flex;
   justify-content: space-between;
@@ -37,7 +33,6 @@ body {
   overflow: hidden;
   padding: 5px;
 }
-
 .option {
   flex: 1;
   text-align: center;
@@ -53,12 +48,8 @@ body {
   border-radius: 30px; 
 }
 
-.option.selected {
-  color: #fff;
-}
-
 .option:hover {
-  background: rgba(255, 255, 255, 0.5); /* Slight hover effect */
+  background: rgb(178, 218, 231) !important;
 }
 
 .feedback-container {

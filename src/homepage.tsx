@@ -11,6 +11,7 @@ const Homepage: React.FC = () => {
   const [selectedOptions, setSelectedOptions] = useState<number[]>([]);
   const [isLocked, setIsLocked] = useState<boolean>(false);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+  const [correctnessRatio, setCorrectnessRatio] = useState(0);  // Track proportion of correct answers
 
   const currentQuestion = shuffledQuestions[currentQuestionIndex];
 
@@ -21,28 +22,33 @@ const Homepage: React.FC = () => {
     setSelectedOptions(new Array(currentQuestion.options.length).fill(null));  // Initialize selected options as null
     setIsCorrect(null);
     setIsLocked(false);
+    setCorrectnessRatio(0);  // Reset the correctness ratio for the new question
   }, [currentQuestionIndex]);
 
-  // Handle toggle selection
+  // Handle toggle selection and update background proportionally
   const handleOptionClick = (toggleIndex: number, selectedIndex: number) => {
     if (!isLocked) {
       const updatedOptions = [...selectedOptions];
       updatedOptions[toggleIndex] = selectedIndex;
       setSelectedOptions(updatedOptions);
 
-      // Check if all answers are selected
+      // Calculate how correct the current selection is
+      const totalCorrect = updatedOptions.reduce((count, selected, index) => {
+        if (selected !== null && shuffledOptions[index][selected] === currentQuestion.correctAnswer[index]) {
+          return count + 1;
+        }
+        return count;
+      }, 0);
+
+      const correctRatio = totalCorrect / currentQuestion.options.length;  // Ratio of correct answers
+      setCorrectnessRatio(correctRatio);  // Update the correctness ratio
+
+      // Check if all answers are selected and correct
       const allSelected = updatedOptions.every(opt => opt !== null);
-
       if (allSelected) {
-        // Compare selected answer with correct answer (by matching the text)
-        const isAnswerCorrect = updatedOptions.every((selected, index) => {
-          const selectedAnswer = shuffledOptions[index][selected];  // Get selected answer text
-          const correctAnswer = currentQuestion.correctAnswer[index];  // Get correct answer text
-          return selectedAnswer === correctAnswer;  // Compare selected answer with correct one
-        });
-
+        const isAnswerCorrect = totalCorrect === currentQuestion.options.length;
         setIsCorrect(isAnswerCorrect);
-        setIsLocked(isAnswerCorrect);  // Lock if correct
+        setIsLocked(isAnswerCorrect);  // Lock if all correct
       } else {
         setIsCorrect(null);  // Reset correctness if not all toggles are selected
       }
@@ -56,13 +62,20 @@ const Homepage: React.FC = () => {
       setCurrentQuestionIndex(nextIndex);
     } else {
       alert('You’ve completed all questions!');
-      window.location.reload()
     }
   };
 
+  // Function to determine the background gradient based on correctness ratio
+  const calculateBackgroundGradient = () => {
+    // Transitioning from a light peach to a light blue gradient in proportion to correctness
+    const gradientStart = `#ffecd2, ${1 - correctnessRatio})`; // Lighter peach
+    const gradientEnd = `#fcb69f, ${correctnessRatio})`; // Softer transition with the peach tone
+    return `linear-gradient(135deg, ${gradientStart}, ${gradientEnd})`;
+  };
+
   return (
-    <div className="game-container">
-      <h1 className='fw-bold'>{currentQuestion.questionText}</h1>
+    <div className="game-container" style={{ background: calculateBackgroundGradient() }}>
+      <h1>{currentQuestion.questionText}</h1>
       <div className="switch-container">
         {shuffledOptions.map((optionSet, toggleIndex) => (
           <Toggle
@@ -71,14 +84,15 @@ const Homepage: React.FC = () => {
             selectedOption={selectedOptions[toggleIndex]}
             onClick={(selectedIndex: number) => handleOptionClick(toggleIndex, selectedIndex)}
             disabled={isLocked}
+            correctnessRatio={correctnessRatio}  // Pass correctness ratio to the toggle for synced styling
           />
         ))}
       </div>
       <div className="feedback-container">
-        {isCorrect === false && <p className="incorrect-message">The answer is incorrect</p>}
-        {isCorrect && <p className="correct-message">Correct! The answer is locked.</p>}
+        {isCorrect === false && <p className="error-message">The answer is incorrect</p>}
+        {isCorrect && <p className="success-message">Correct! The answer is locked.</p>}
       </div>
-      <div className='button-container'>
+      <div className="button-container">
         {isLocked && (
             <button className="next-button" onClick={handleNextQuestion}>
             Next Question

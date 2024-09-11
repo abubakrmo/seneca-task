@@ -1,16 +1,16 @@
 import React from 'react';
 import './App.css';
-import './homepage'
 import Homepage from './homepage';
 
-function App() {
+
+const App: React.FC = () => {
   return (
-    <div className="App container">
-      <div className="content">
+    <div className="App">
+      <div className="content container">
         <Homepage/>
       </div>
     </div>
   );
-}
+};
 
 export default App;

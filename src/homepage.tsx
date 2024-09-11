@@ -1,3 +1,4 @@
+import Toggle from "./toggle";
 const Homepage = () => {
     return (  
         <div className="homepage">

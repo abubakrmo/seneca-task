@@ -1,24 +1,42 @@
 export type Question = {
-    questionText: string;
-    correctAnswer: boolean[];
-  };
-  
-  export const questionSets: Question[] = [
-    {
-      questionText: 'Is the combination correct?',
-      correctAnswer: [true, false, true],
-    },
-    {
-      questionText: 'Which toggle is active?',
-      correctAnswer: [false, true, false],
-    },
-    {
-      questionText: 'Are all toggles off?',
-      correctAnswer: [false, false, false],
-    },
-  ];
-  
-  export const getRandomizedQuestions = (): Question[] => {
-    return questionSets.sort(() => Math.random() - 0.5);
-  };
-  
+  questionText: string;
+  options: string[][]; 
+  correctAnswer: string [];
+};
+
+// Utility function to shuffle an array
+export const shuffleArray = (array: any[]) => {
+  return array.sort(() => Math.random() - 0.5);
+};
+
+// Example questions
+export const questions: Question[] = [
+  {
+    questionText: "An animal cell contains:",
+    options: [
+      ["Cell wall", "Ribosomes"],
+      ["Cytoplasm", "Chloroplast"],
+      ["Cellulose", "Mitochondria"]
+    ],
+    correctAnswer: ["Ribosomes", "Cytoplasm", "Mitochondria"] // Correct answers are Ribosomes, Cytoplasm, Partially permeable membrane, Mitochondria
+  },
+  {
+    questionText: "Which are the best sports people & teams?",
+    options: [
+      ["Liverpool", "Man Utd", "Chelsea"],
+      ["Serena Williams", "Naomi Osaka"]  
+    ],
+    correctAnswer: ["Man Utd", "Serena Williams"] // Correct answers are Man Utd and Serena Williams
+  },
+  {
+    questionText: "What are the ideal conditions inside an office?",
+    options: [
+      ["Bad pay", "Good pay"],
+      ["Free coffee", "Expensive coffee"],
+      ["Bear in office", "Dog in office"],
+      ["Lot of meeting", "Less meetings"]
+    ],
+    correctAnswer: ["Good pay", "Free coffee", "Dog in office", "Less meetings"]
+  }
+
+];

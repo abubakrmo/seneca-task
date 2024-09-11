@@ -5,7 +5,7 @@ import Homepage from './homepage';
 
 const App: React.FC = () => {
   return (
-    <div className="App">
+    <div className="app">
       <div className="content container">
         <Homepage/>
       </div>

@@ -1,19 +1,29 @@
-type ToggleProps = {
-    isActive: boolean;
-    onClick: () => void;
-    disabled: boolean;
-  };
-  
+// Toggle.tsx
+import React from 'react';
+import './App.css';
 
-const Toggle: React.FC<ToggleProps> = ({ isActive, onClick, disabled}) => {
-    return(
-        <div className="toggle container">
-            <h2 className="qheader">Question</h2>
-            <button onClick={onClick} disabled={disabled} className={`toggle ${isActive ? "active" : ""}`}>
-            {isActive ? "On" : "Off"}
-            </button>
-        </div>
-    )
+interface ToggleProps {
+  options: string[];
+  selectedOption: number | null;  // null if not selected
+  onClick: (index: number) => void;
+  disabled: boolean;
 }
+
+const Toggle: React.FC<ToggleProps> = ({ options, selectedOption, onClick, disabled }) => {
+  return (
+    <div className={`toggle-switch ${disabled ? 'disabled' : ''}`}>
+      {options.map((option, index) => (
+        <button
+          key={index}
+          className={`option ${selectedOption === index ? 'selected' : ''}`}
+          onClick={() => onClick(index)}
+          disabled={disabled}
+        >
+          {option}
+        </button>
+      ))}
+    </div>
+  );
+};
 
 export default Toggle;
